@@ -94,6 +94,10 @@ var ALT      = "+alt",
                 config.type = "press";
             }
 
+            if (config.type == "press") {
+                console.warn("keypress event is deprecated - consider switching to keyup or keydown");
+            }
+
             return config;
         },
 
