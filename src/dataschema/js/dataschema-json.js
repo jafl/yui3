@@ -391,7 +391,7 @@ SchemaJSON = {
                 // Cycle through fieldParsers
                 for (j=fieldParsers.length-1; j>=0; --j) {
                     key = fieldParsers[j].key;
-                    record[key] = fieldParsers[j].parser.call(this, record[key]);
+                    record[key] = fieldParsers[j].parser.call(this, record[key], record);
                     // Safety net
                     if (record[key] === undefined) {
                         record[key] = null;

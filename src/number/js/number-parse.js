@@ -72,7 +72,8 @@ Y.mix(Y.namespace("Number"), {
     parse: function(data, config) {
         var parser;
 
-        if (config && typeof data === 'string') {
+        // check for this._buildParser because dataschema-json calls parser with (value, record)
+        if (config && typeof data === 'string' && this._buildParser) {
             parser = this._buildParser(config.prefix, config.suffix, config.thousandsSeparator, config.decimalSeparator);
 
             data = parser(data);
