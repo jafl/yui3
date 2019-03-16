@@ -83,6 +83,7 @@ Y.NumericAxis = Y.Base.create("numericAxis", Y.Axis, [Y.NumericImpl], {
         for(i = 0; i < count; i = i + 1)
         {
             dataValue = parseFloat(dataValues[i]);
+//            dataValue = this._roundToNearest(parseFloat(dataValues[i]), (max-min)/(count));
             if(dataValue <= max && dataValue >= min)
             {
                 point = {};

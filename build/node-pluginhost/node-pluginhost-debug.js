@@ -40,7 +40,7 @@ Y.Node.unplug = function() {
 Y.mix(Y.Node, Y.Plugin.Host, false, null, 1);
 
 // run PluginHost constructor on cached Node instances
-// TODO: Some way to fix this?  WeakMap is not iterable.
+// TODO: Some way to fix this?  WeakMap is not iterable. Only an issue if node-pluginhost is not loaded during YUI init.
 //Y.Object.each(Y.Node._instances, function (node) {
 //    Y.Plugin.Host.apply(node);
 //});
