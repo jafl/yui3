@@ -14,9 +14,10 @@ var L            = Y.Lang,
     toString = OP.toString;
 
 /**
-Calls the specified _action_ method on _o_ if it exists. Otherwise, if _o_ is an
-array, calls the _action_ method on `Y.Array`, or if _o_ is an object, calls the
-_action_ method on `Y.Object`.
+Calls the specified _action_ method on _o_ if it exists. Otherwise, if _o_
+is an array, calls the _action_ method on `Y.Array`, or if _o_ is an
+object, calls the specified _action_ method on _o_, if it exists, or calls
+the _action_ method on `Y.Object`.
 
 If _o_ is an array-like object, it will be coerced to an array.
 
@@ -24,34 +25,30 @@ This is intended to be used with array/object iteration methods that share
 signatures, such as `each()`, `some()`, etc.
 
 @method dispatch
-@param {Object} o Array or object to dispatch to.
-@param {Function} f Iteration callback.
-    @param {Mixed} f.value Value being iterated.
-    @param {Mixed} f.key Current object key or array index.
-    @param {Mixed} f.object Object or array being iterated.
-@param {Object} c `this` object to bind the iteration callback to.
-@param {Boolean} proto If `true`, prototype properties of objects will be
-    iterated.
 @param {String} action Function name to be dispatched on _o_. For example:
     'some', 'each', etc.
-@private
+@param {Object} o Array or object to dispatch to.
+@param {Mixed} ... arguments to pass to the function
 @return {Mixed} Returns the value returned by the chosen iteration action, which
     varies.
 **/
-function dispatch(o, f, c, proto, action) {
-    if (o && o[action] && o !== Y) {
-        return o[action].call(o, f, c);
-    } else {
-        switch (A.test(o)) {
-            case 1:
-                return A[action](o, f, c);
-            case 2:
-                return A[action](Y.Array(o, 0, true), f, c);
-            default:
-                return Y.Object[action](o, f, c, proto);
-        }
+Y.dispatchIterator = function(action, o) {
+    var args = A(arguments, 1, true);
+    switch (A.test(o)) {
+        case 1:     // array
+            return A[action].apply(null, args);
+        case 2:     // array-like
+            args[0] = A(o, 0, true);
+            return A[action].apply(null, args);
+        default:    // something else
+            if (o && o[action] && o !== Y) {
+                args.shift();
+                return o[action].apply(o, args);
+            } else {
+                return Y.Object[action].apply(null, args);
+            }
     }
-}
+};
 
 /**
 Augments the _receiver_ with prototype properties from the _supplier_. The
@@ -233,7 +230,7 @@ Y.extend = function(r, s, px, sx) {
  * @return {YUI} the YUI instance.
  */
 Y.each = function(o, f, c, proto) {
-    return dispatch(o, f, c, proto, 'each');
+    return Y.dispatchIterator('each', o, f, c, proto);
 };
 
 /**
@@ -252,7 +249,7 @@ Y.each = function(o, f, c, proto) {
  * false otherwise.
  */
 Y.some = function(o, f, c, proto) {
-    return dispatch(o, f, c, proto, 'some');
+    return Y.dispatchIterator('some', o, f, c, proto);
 };
 
 /**
