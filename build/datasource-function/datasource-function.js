@@ -86,7 +86,13 @@ Y.extend(DSFn, Y.DataSource.Local, {
 
         if (fn) {
             try {
-                payload.data = fn(e.request, this, e);
+                var obj = fn(e.request, this, e);
+                if (obj.data && obj.meta) {
+                    payload.data = obj.data;
+                    payload.meta = obj.meta;
+                } else {
+                    payload.data = obj;
+                }
             } catch (ex) {
                 payload.error = ex;
             }
