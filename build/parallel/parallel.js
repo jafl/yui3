@@ -74,7 +74,6 @@ Y.Parallel.prototype = {
             self.finished++;
             self.results[index] = (fn && fn.apply(self.context, arguments)) ||
                 (arguments.length === 1 ? arguments[0] : Y.Array(arguments));
-
             self.test();
         };
     },
