@@ -68,7 +68,8 @@ NodeMap.prototype = {
     },
 
     destructor: function () {
-        instances.delete(this.get('container'));
+        // Adobe AIR runtime can't handle bareword 'delete'
+        instances['delete'](this.get('container'));
     }
 };
 

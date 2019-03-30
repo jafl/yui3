@@ -435,7 +435,8 @@ Y.extend(Widget, Y.Base, {
             bbGuid;
 
         if (boundingBox instanceof Node) {
-            _instances.delete(boundingBox);
+            // Adobe AIR runtime can't handle bareword 'delete'
+            _instances['delete'](boundingBox);
 
             this._destroyBox();
         }

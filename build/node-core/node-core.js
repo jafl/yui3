@@ -782,7 +782,8 @@ Y.mix(Y_Node.prototype, {
             });
         }
 
-        Y_Node._instances.delete(this._node);
+        // Adobe AIR runtime can't handle bareword 'delete'
+        Y_Node._instances['delete'](this._node);
 
         this._node = null;
         this._stateProxy = null;
