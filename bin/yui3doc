@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# http://yui.github.com/yuidoc/syntax/index.html
+
+DEBUG=$1
+
+parser_in_prefix=~/tools/yui3/src
+
+generator_out=~/tools/jafl.github-yui3-build/yuidoc
+
+# The version of your project to display within the documentation.
+version=3.18.2
+
+if [[ -z $DEBUG ]]; then
+	rm -rf $generator_out
+else
+	server="--server 5000";
+fi
+
+pushd ~/tools/yui3/bin
+
+rm -rf src
+mkdir src
+
+for f in ../src/*; do
+	d=${f##*/}
+	if [[ ! -d $f ]]; then continue; fi
+
+	d=${parser_in_prefix}/$d
+	rm -rf $d/build_tmp
+	cp -R $d src/
+done
+
+yuidoc $server --project-version $version -o $generator_out .
+
+rm -rf src
+
+popd
